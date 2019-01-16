@@ -21,3 +21,7 @@ To install all the dependencies navigate to the install folder and execute
 ```bash
 ./config.sh
 ```
+
+## Author
+
+[Alessandro Carfì](https://github.com/ACarfi) e-mail: alessandro.carfi@dibris.unige.it
