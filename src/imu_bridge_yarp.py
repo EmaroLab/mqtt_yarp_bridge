@@ -3,6 +3,7 @@
 import mqtt_wrapper
 import yarp
 import signal
+from time import sleep
 
 yarp.Network.init()
 Stamp = yarp.Stamp()
@@ -32,35 +33,35 @@ class imu_bridge_recordings(mqtt_wrapper.bridge):
             moduleSizeGyro = 4*pkgSizeGyro+2
             gyro_msg = msg_list[moduleSizeAcc+2:moduleSizeAcc+moduleSizeGyro]
             
-            acceleration = acceleration_port.prepare()
-            acceleration.clear()
-            acceleration.addString(str(topic_name_acc))
+            
+	    Stamp.update()            
 
             for i in range(0,pkgSizeAcc):
+		acceleration = acceleration_port.prepare()
+		acceleration.clear()
+            	acceleration.addString(str(topic_name_acc))
 		acceleration.addDouble(float(acc_msg[3*i].replace(',','.')))
                 acceleration.addDouble(float(acc_msg[3*i+1].replace(',','.')))
                 acceleration.addDouble(float(acc_msg[3*i+2].replace(',','.')))
 
-                acceleration.addDouble(float(acc_msg[3*pkgSizeAcc+i]))
-	
-            Stamp.update()
-            acceleration_port.setEnvelope(Stamp)
-            acceleration_port.write()
-        
+                acceleration.addDouble(float(acc_msg[3*pkgSizeAcc+i]))            
 
-            velocity = velocity_port.prepare()
-            velocity.clear()
-            velocity.addString(str(topic_name_vel))
-
+		acceleration_port.setEnvelope(Stamp)
+            	acceleration_port.write()
+            
+            
             for i in range(0,pkgSizeGyro):
+		velocity = velocity_port.prepare()
+		velocity.clear()
+            	velocity.addString(str(topic_name_vel))
                 velocity.addDouble(float(gyro_msg[3*i].replace(',','.')))
                 velocity.addDouble(float(gyro_msg[3*i+1].replace(',','.')))
                 velocity.addDouble(float(gyro_msg[3*i+2].replace(',','.')))
 
                 velocity.addDouble(float(gyro_msg[3*pkgSizeGyro+i]))
 
-            velocity_port.setEnvelope(Stamp)
-            velocity_port.write()
+            	velocity_port.setEnvelope(Stamp)
+            	velocity_port.write()
 
         else:
             print  msg.topic + " is not a supported topic"
@@ -75,7 +76,9 @@ def main():
         imu_sub.looping()
         try:
             imu_sub.looping()
-        except KeyboardInterrupt:            
+        except KeyboardInterrupt:    
+	    acceleration_port.close()
+	    velocity_port.close()        
             imu_sub.hook
             break
         
