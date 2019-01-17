@@ -45,9 +45,9 @@ class imu_bridge_recordings(mqtt_wrapper.bridge):
                 acceleration.addDouble(float(acc_msg[3*i+2].replace(',','.')))
 
                 acceleration.addDouble(float(acc_msg[3*pkgSizeAcc+i]))            
-
+		
 		acceleration_port.setEnvelope(Stamp)
-            	acceleration_port.write()
+            	acceleration_port.writeStrict()
             
             
             for i in range(0,pkgSizeGyro):
@@ -61,7 +61,7 @@ class imu_bridge_recordings(mqtt_wrapper.bridge):
                 velocity.addDouble(float(gyro_msg[3*pkgSizeGyro+i]))
 
             	velocity_port.setEnvelope(Stamp)
-            	velocity_port.write()
+            	velocity_port.writeStrict()
 
         else:
             print  msg.topic + " is not a supported topic"
