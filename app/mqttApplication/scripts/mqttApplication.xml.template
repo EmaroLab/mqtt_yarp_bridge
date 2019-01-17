@@ -1,0 +1,40 @@
+<application>
+
+	<name>smartwatchApplication</name>	
+
+	
+	<module>
+	        <name>yarpdatadumper</name>
+	        <parameters>--name /accelerationDumper</parameters>
+	        <node>/icub16</node>
+	</module>
+	<module>
+	        <name>yarpdatadumper</name>
+	        <parameters>--name /velocityDumper</parameters>
+	        <node>/icub16</node>
+	</module>
+	
+	
+	<module>
+		<name>yarpscope</name>
+		<parameters>--xml descriptorScopeMinima.xml --context mtqqApplication</parameters>
+		<node>/icub16</node>
+	</module>
+	
+	
+
+   
+
+   <connection>
+        <from>/imu/velocity</from>
+        <to>/velocityDumper</to>
+        <protocol>tcp</protocol>
+   </connection>
+   <connection>
+        <from>/imu/acceleration</from>
+        <to>/acccelerationDumper</to>
+	<protocol>tcp</protocol>
+   </connection>
+   
+
+</application>
