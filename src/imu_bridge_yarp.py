@@ -72,13 +72,38 @@ class imu_bridge_recordings(mqtt_wrapper.bridge):
 def main():
     imu_sub = imu_bridge_recordings('#', 'bridge_imu_recording')
 
+    start = "c"
+    stop = "d"
+    record = False
+
+    inputPortname = '/smartwatch/keyboard:i'
+    inputPort = yarp.Port()
+    inputPort.open(inputPortname)
+    
+
     while True:
-        imu_sub.looping()
         try:
+            inputPort.read(messageBottle)
+            receivedMessage = messageBottle.toString()
+
+            if(receivedMessage == start):
+                record = True
+            else:
+                record = False
+
             imu_sub.looping()
+
+            while record:
+                try:
+                    imu_sub.looping()
+                except KeyboardInterrupt:    
+                acceleration_port.close()
+                velocity_port.close()        
+                    imu_sub.hook
+                    break
         except KeyboardInterrupt:    
-	    acceleration_port.close()
-	    velocity_port.close()        
+            acceleration_port.close()
+            velocity_port.close()        
             imu_sub.hook
             break
         
